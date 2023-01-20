@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 //1 importamos el modelo
 const Server = require("./models/server");
 
