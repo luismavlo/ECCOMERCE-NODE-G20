@@ -1,41 +1,20 @@
 const { Router } = require('express');
+const {
+  findProduct,
+  creteProduct,
+  updateProduct,
+  deleteProduct,
+} = require('../controllers/product.controller');
 
 const router = Router();
 
-router.get('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'ROUTE - GET',
-  });
-});
+router.get('/', findProduct);
 
-router.post('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'ROUTE - POST DESDE LA RUTA',
-  });
-});
+router.post('/', creteProduct);
 
-router.patch('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'ROUTE - PATCH',
-  });
-});
+router.patch('/', updateProduct);
 
-router.put('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'ROUTE - PUT',
-  });
-});
-
-router.delete('/', (req, res) => {
-  res.json({
-    status: 'success',
-    message: 'ROUTE - DELETE',
-  });
-});
+router.delete('/', deleteProduct);
 
 module.exports = {
   productRouter: router,
