@@ -9,7 +9,7 @@ class Server {
     //DEFINIMOS LA APLICACIÓN DE EXPRESS Y SE LA ASIGNAMOS A LA PROPIEDAD APP
     this.app = express();
     //DEFINIMOS EL PUERTO QUE LO TENEMOS EN LOS ENVIROMENTS
-    this.port = process.env.PORT || 4000;
+    this.port = process.env.PORT || 3000;
 
     //DEFINIMOS LOS PATHS DE NUESTRA APLICACIÓN
     this.paths = {
