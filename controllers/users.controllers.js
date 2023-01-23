@@ -4,7 +4,7 @@ const findUsers = (req, res) => {
   });
 };
 
-const findUserById = (req, res) => {
+const findUser = (req, res) => {
   res.json({
     status: 'success',
   });
@@ -30,7 +30,7 @@ const deleteUser = (req, res) => {
 
 module.exports = {
   findUsers,
-  findUserById,
+  findUser,
   createUser,
   updateUser,
   deleteUser,

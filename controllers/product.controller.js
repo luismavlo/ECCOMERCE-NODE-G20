@@ -1,11 +1,11 @@
-exports.findProduct = (req, res) => {
+exports.findProducts = (req, res) => {
   res.json({
     status: 'success',
     message: 'ROUTE - GET DESDE EL CONTROLADOR',
   });
 };
 
-exports.findProductById = (req, res) => {
+exports.findProduct = (req, res) => {
   res.json({
     status: 'success',
     message: 'ROUTE FIND PRODUCT BY ID',

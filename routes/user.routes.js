@@ -1,17 +1,17 @@
 const { Router } = require('express');
 const {
-  findUserById,
   createUser,
   updateUser,
   deleteUser,
   findUsers,
+  findUser,
 } = require('../controllers/users.controllers');
 
 const router = Router();
 
 router.get('/', findUsers);
 
-router.get('/:id', findUserById);
+router.get('/:id', findUser);
 
 router.post('/', createUser);
 
