@@ -1,3 +1,5 @@
+const Product = require('../models/product.model');
+
 exports.findProducts = (req, res) => {
   res.json({
     status: 'success',
@@ -12,17 +14,22 @@ exports.findProduct = (req, res) => {
   });
 };
 
-exports.createProduct = (req, res) => {
-  const { name, price, stock } = req.body;
+exports.createProduct = async (req, res) => {
+  const { title, description, quantity, price, categoryId, userId } = req.body;
 
-  res.json({
+  const newProduct = await Product.create({
+    title,
+    description,
+    quantity,
+    price,
+    categoryId,
+    userId,
+  });
+
+  res.status(201).json({
     status: 'success',
-    message: 'ROUTE - POST DESDE LA RUTA',
-    product: {
-      name,
-      price,
-      stock,
-    },
+    message: 'The product was created successfully',
+    newProduct,
   });
 };
 

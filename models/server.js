@@ -2,6 +2,7 @@ const express = require('express');
 const { productRouter } = require('../routes/product.routes');
 const cors = require('cors');
 const { usersRouter } = require('../routes/user.routes');
+const { db } = require('../database/db');
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -16,6 +17,9 @@ class Server {
       user: '/api/v1/user',
       products: '/api/v1/products',
     };
+
+    //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS
+    this.database();
 
     //INVOCAMOS EL METODO MIDDLEWARES
     this.middlewares();
@@ -38,6 +42,16 @@ class Server {
     this.app.use(this.paths.products, productRouter);
     //utilizar las rutas de usuarios
     this.app.use(this.paths.user, usersRouter);
+  }
+
+  database() {
+    db.authenticate()
+      .then(() => console.log('Database authenticated'))
+      .catch(error => console.log(error));
+
+    db.sync()
+      .then(() => console.log('Database synced'))
+      .catch(error => console.log(error));
   }
 
   //METODO PARA ESCUCHAR SOLICITUDES POR EL PUERTO
