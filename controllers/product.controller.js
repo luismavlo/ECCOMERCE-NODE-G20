@@ -91,12 +91,32 @@ exports.updateProduct = async (req, res) => {
   });
 };
 
-exports.deleteProduct = (req, res) => {
+exports.deleteProduct = async (req, res) => {
+  //1. OBTENGO EL ID DE LA REQ.PARAMS
   const { id } = req.params;
+  //2. BUSCAR EL PRODUCTO A ELIMINAR
+  const product = await Product.findOne({
+    where: {
+      id,
+      status: true,
+    },
+  });
 
-  res.json({
+  //3. ENVIAR UN ERROR SI EL PRODUCTO NO SE ENCUENTRA
+  if (!product) {
+    return res.status(404).json({
+      status: 'error',
+      message: 'The product was not found',
+    });
+  }
+  //4. ACTUALIZAR EL ESTADO DEL PRODUCTO A FALSE
+  await product.update({ status: false });
+  //await product.destroy();
+
+  //5. ENVIAR LA RESPUESTA AL CLIENTE
+
+  res.status(200).json({
     status: 'success',
-    message: 'ROUTE - DELETE',
-    id,
+    message: 'The product has been deleted successfully',
   });
 };
