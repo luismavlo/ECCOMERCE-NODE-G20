@@ -39,6 +39,7 @@ exports.findProduct = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
+  // 1. OBTENER LA INFORMACION A GUARDAR DE LA REQ.BODY
   const { title, description, quantity, price, categoryId, userId } = req.body;
 
   const newProduct = await Product.create({
