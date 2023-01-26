@@ -3,6 +3,7 @@ const { productRouter } = require('../routes/product.routes');
 const cors = require('cors');
 const { usersRouter } = require('../routes/user.routes');
 const { db } = require('../database/db');
+const morgan = require('morgan');
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -30,6 +31,10 @@ class Server {
 
   //MIDDLEWARES
   middlewares() {
+    if (process.env.NODE_ENV === 'development') {
+      this.app.use(morgan('dev'));
+    }
+
     //UTILIZAMOS LAS CORS PARA PERMITIR ACCESSO A LA API
     this.app.use(cors());
     //UTILIZAMOS EXPRESS.JSON PARA PARSEAR EL BODY DE LA REQUEST

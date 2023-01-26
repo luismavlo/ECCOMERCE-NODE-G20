@@ -1,24 +1,32 @@
 const User = require('../models/user.model');
 
 const findUsers = async (req, res) => {
-  // 1. BUSCAR TODOS LOS USUARIOS QUE ESTAN CON STATUS TRUE
-  const users = await User.findAll({
-    where: {
-      status: true,
-    },
-  });
+  try {
+    // 1. BUSCAR TODOS LOS USUARIOS QUE ESTAN CON STATUS TRUE
+    const users = await User.findAll({
+      where: {
+        status: true,
+      },
+    });
 
-  // NOTA: NO ES NECESARIO ENVIAR MENSAJE DE ERROR SI NO HAY USUARIOS, DEBIDO A QUE EL DEVUELVE UN ARRAY VACIO
-  // LES PONGO UN EJEMPLO, SUPONGAMOS QUE USTEDES BUSCAN ALGUN PRODUCTO EN UNA TIENDA, Y ESE PRODUCTO NO SE ENCUENTRA,
-  // LA TIENDA NO LE ENVIA A USTED NINGUN MENSAJE DE ERROR, SIMPLEMENTE NO LE MUESTRA NADA, ES POR ESO QUE EN ESTE CASO
-  // PARA BUSCAR TODOS LOS USUARIOS NO ES NECESARIO DEVOLVER UN ERROR SI NO LOS ENCUENTRA, SIMPLEMENTE RETORNARA UN ARREGLO VACIO
+    // NOTA: NO ES NECESARIO ENVIAR MENSAJE DE ERROR SI NO HAY USUARIOS, DEBIDO A QUE EL DEVUELVE UN ARRAY VACIO
+    // LES PONGO UN EJEMPLO, SUPONGAMOS QUE USTEDES BUSCAN ALGUN PRODUCTO EN UNA TIENDA, Y ESE PRODUCTO NO SE ENCUENTRA,
+    // LA TIENDA NO LE ENVIA A USTED NINGUN MENSAJE DE ERROR, SIMPLEMENTE NO LE MUESTRA NADA, ES POR ESO QUE EN ESTE CASO
+    // PARA BUSCAR TODOS LOS USUARIOS NO ES NECESARIO DEVOLVER UN ERROR SI NO LOS ENCUENTRA, SIMPLEMENTE RETORNARA UN ARREGLO VACIO
 
-  // 2. ENVIAR UNA RESPUESTA AL USUARIO
-  res.status(200).json({
-    status: 'success',
-    message: 'Users was found successfully',
-    users,
-  });
+    // 2. ENVIAR UNA RESPUESTA AL USUARIO
+    res.status(200).json({
+      status: 'success',
+      message: 'Users was found successfully',
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Internal server error',
+    });
+  }
 };
 
 const findUser = async (req, res) => {
