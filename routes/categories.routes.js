@@ -1,16 +1,23 @@
 const { Router } = require('express');
+const {
+  createCategory,
+  findCategories,
+  findCategory,
+  updateCategory,
+  deleteCategory,
+} = require('../controllers/categories.controller');
 
 const router = Router();
 
-// findCategory
+router.get('/', findCategories);
 
-// findCategories
+router.get('/:id', findCategory);
 
-// createCategory
+router.post('/', createCategory);
 
-// updateCategory
+router.patch('/:id', updateCategory);
 
-// deleteCategory
+router.delete('/:id', deleteCategory);
 
 module.exports = {
   categoriesRouter: router,

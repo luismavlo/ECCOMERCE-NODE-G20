@@ -4,6 +4,7 @@ const cors = require('cors');
 const { usersRouter } = require('../routes/user.routes');
 const { db } = require('../database/db');
 const morgan = require('morgan');
+const { categoriesRouter } = require('../routes/categories.routes');
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -17,6 +18,7 @@ class Server {
     this.paths = {
       user: '/api/v1/user',
       products: '/api/v1/products',
+      categories: '/api/v1/categories',
     };
 
     //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS
@@ -47,6 +49,8 @@ class Server {
     this.app.use(this.paths.products, productRouter);
     //utilizar las rutas de usuarios
     this.app.use(this.paths.user, usersRouter);
+    //utilizar las rutas de categorias
+    this.app.use(this.paths.categories, categoriesRouter);
   }
 
   database() {
