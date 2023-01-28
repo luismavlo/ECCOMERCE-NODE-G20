@@ -6,18 +6,22 @@ const {
   findUsers,
   findUser,
 } = require('../controllers/users.controllers');
+const {
+  validIfExistUser,
+  validIfExistUserEmail,
+} = require('../middlewares/user.middleware');
 
 const router = Router();
 
 router.get('/', findUsers);
 
-router.get('/:id', findUser);
+router.get('/:id', validIfExistUser, findUser);
 
-router.post('/', createUser);
+router.post('/', validIfExistUserEmail, createUser);
 
-router.patch('/:id', updateUser);
+router.patch('/:id', validIfExistUser, updateUser);
 
-router.delete('/:id', deleteUser);
+router.delete('/:id', validIfExistUser, deleteUser);
 
 module.exports = {
   usersRouter: router,

@@ -2,6 +2,7 @@ const Product = require('../models/product.model');
 
 exports.validProductById = async (req, res, next) => {
   try {
+    // es el id del producto que vamos a ver si existe
     const { id } = req.params;
 
     const product = await Product.findOne({
@@ -10,6 +11,8 @@ exports.validProductById = async (req, res, next) => {
         status: true,
       },
     });
+
+    console.log(req);
 
     if (!product) {
       return res.status(404).json({
