@@ -44,21 +44,7 @@ exports.findCategories = async (req, res) => {
 
 exports.findCategory = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const category = await Category.findOne({
-      where: {
-        id,
-        status: true,
-      },
-    });
-
-    if (!category) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Category not found',
-      });
-    }
+    const { category } = req;
 
     res.status(200).json({
       status: 'success',
@@ -74,8 +60,17 @@ exports.findCategory = async (req, res) => {
   }
 };
 
-exports.updateCategory = (req, res) => {
+exports.updateCategory = async (req, res) => {
   try {
+    const { name } = req.body;
+    const { category } = req;
+
+    await category.update({ name });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Category updated successfully',
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -85,8 +80,16 @@ exports.updateCategory = (req, res) => {
   }
 };
 
-exports.deleteCategory = (req, res) => {
+exports.deleteCategory = async (req, res) => {
   try {
+    const { category } = req;
+
+    await category.update({ status: false });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Category deleted successfully',
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

@@ -24,21 +24,7 @@ exports.findProducts = async (req, res) => {
 
 exports.findProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const product = await Product.findOne({
-      where: {
-        id,
-        status: true,
-      },
-    });
-
-    if (!product) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The product was not found',
-      });
-    }
+    const { product } = req;
 
     return res.status(200).json({
       status: 'success',
@@ -86,23 +72,10 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     //1. OBTENGO MI ID DE LA REQ.PARAMS
-    const { id } = req.params;
+    const { product } = req;
     //2. OBTENER LA INFORMACION A ACTUALIZAR DE LA REQ.BODY
     const { title, description, quantity, price } = req.body;
-    //3. BUSCAR EL PRODUCTO A ACTUALIZAR
-    const product = await Product.findOne({
-      where: {
-        id,
-        status: true,
-      },
-    });
-    //4. SI NO EXISTE EL PRODUCTO ENVIAMOS UN ERROR
-    if (!product) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The product was not found',
-      });
-    }
+
     //5. SI TODO SALIO BIEN, ACTUALIZAMOS EL PRODUCTO ENCONTRADO
     const updatedProduct = await product.update({
       title,
@@ -127,23 +100,8 @@ exports.updateProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
   try {
-    //1. OBTENGO EL ID DE LA REQ.PARAMS
-    const { id } = req.params;
-    //2. BUSCAR EL PRODUCTO A ELIMINAR
-    const product = await Product.findOne({
-      where: {
-        id,
-        status: true,
-      },
-    });
+    const { product } = req;
 
-    //3. ENVIAR UN ERROR SI EL PRODUCTO NO SE ENCUENTRA
-    if (!product) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'The product was not found',
-      });
-    }
     //4. ACTUALIZAR EL ESTADO DEL PRODUCTO A FALSE
     await product.update({ status: false });
     //await product.destroy();
