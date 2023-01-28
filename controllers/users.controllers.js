@@ -67,26 +67,26 @@ const findUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
+    //1. OBTENER LA INFORMACION DE LA REQ.BODY
+    const { username, email, password } = req.body;
+    //2. CREAR EL USUARIO CON LA INFORMACION DE LA REQ.BODY
+    const user = await User.create({
+      username: username.toLowerCase(),
+      email: email.toLowerCase(),
+      password,
+    });
+    //3. ENVIAR UNA RESPUESTA AL USUARIO
+    res.status(201).json({
+      status: 'success',
+      message: 'User created successfully',
+      user,
+    });
   } catch (error) {
     return res.status(500).json({
       status: 'fail',
       message: 'Internal server error',
     });
   }
-  //1. OBTENER LA INFORMACION DE LA REQ.BODY
-  const { username, email, password } = req.body;
-  //2. CREAR EL USUARIO CON LA INFORMACION DE LA REQ.BODY
-  const user = await User.create({
-    username: username.toLowerCase(),
-    email: email.toLowerCase(),
-    password,
-  });
-  //3. ENVIAR UNA RESPUESTA AL USUARIO
-  res.status(201).json({
-    status: 'success',
-    message: 'User created successfully',
-    user,
-  });
 };
 
 const updateUser = async (req, res) => {
