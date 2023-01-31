@@ -1,122 +1,75 @@
 const Product = require('../models/product.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findProducts = async (req, res) => {
-  try {
-    const products = await Product.findAll({
-      where: {
-        status: true,
-      },
-    });
+exports.findProducts = catchAsync(async (req, res) => {
+  const products = await Product.findAll({
+    where: {
+      status: true,
+    },
+  });
 
-    res.status(200).json({
-      status: 'success',
-      message: 'The products found were successfully',
-      products,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'The products found were successfully',
+    products,
+  });
+});
 
-exports.findProduct = async (req, res) => {
-  try {
-    const { product } = req;
+exports.findProduct = catchAsync(async (req, res) => {
+  const { product } = req;
 
-    return res.status(200).json({
-      status: 'success',
-      message: 'The product was found successfully',
-      product,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  return res.status(200).json({
+    status: 'success',
+    message: 'The product was found successfully',
+    product,
+  });
+});
 
-exports.createProduct = async (req, res) => {
-  try {
-    // 1. OBTENER LA INFORMACION A GUARDAR DE LA REQ.BODY
-    const { title, description, quantity, price, categoryId, userId } =
-      req.body;
+exports.createProduct = catchAsync(async (req, res) => {
+  const { title, description, quantity, price, categoryId, userId } = req.body;
 
-    const newProduct = await Product.create({
-      title: title.toLowerCase(),
-      description: description.toLowerCase(),
-      quantity,
-      price,
-      categoryId,
-      userId,
-    });
+  const newProduct = await Product.create({
+    title: title.toLowerCase(),
+    description: description.toLowerCase(),
+    quantity,
+    price,
+    categoryId,
+    userId,
+  });
 
-    res.status(201).json({
-      status: 'success',
-      message: 'The product was created successfully',
-      newProduct,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success',
+    message: 'The product was created successfully',
+    newProduct,
+  });
+});
 
-exports.updateProduct = async (req, res) => {
-  try {
-    //1. OBTENGO MI ID DE LA REQ.PARAMS
-    const { product } = req;
-    //2. OBTENER LA INFORMACION A ACTUALIZAR DE LA REQ.BODY
-    const { title, description, quantity, price } = req.body;
+exports.updateProduct = catchAsync(async (req, res) => {
+  const { product } = req;
 
-    //5. SI TODO SALIO BIEN, ACTUALIZAMOS EL PRODUCTO ENCONTRADO
-    const updatedProduct = await product.update({
-      title,
-      description,
-      quantity,
-      price,
-    });
-    //6. ENVIO LA RESPUESTA AL CLIENTE
-    res.status(200).json({
-      status: 'success',
-      message: 'Then product has been updated successfully',
-      updatedProduct,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  const { title, description, quantity, price } = req.body;
 
-exports.deleteProduct = async (req, res) => {
-  try {
-    const { product } = req;
+  const updatedProduct = await product.update({
+    title,
+    description,
+    quantity,
+    price,
+  });
 
-    //4. ACTUALIZAR EL ESTADO DEL PRODUCTO A FALSE
-    await product.update({ status: false });
-    //await product.destroy();
+  res.status(200).json({
+    status: 'success',
+    message: 'Then product has been updated successfully',
+    updatedProduct,
+  });
+});
 
-    //5. ENVIAR LA RESPUESTA AL CLIENTE
+exports.deleteProduct = catchAsync(async (req, res) => {
+  const { product } = req;
 
-    res.status(200).json({
-      status: 'success',
-      message: 'The product has been deleted successfully',
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  await product.update({ status: false });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'The product has been deleted successfully',
+  });
+});

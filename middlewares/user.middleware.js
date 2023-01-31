@@ -1,67 +1,47 @@
 const User = require('../models/user.model');
+const AppError = require('../utils/appError');
+const catchAsync = require('../utils/catchAsync');
 
-exports.validIfExistUser = async (req, res, next) => {
-  try {
-    // 1. OBTENER EL ID DE LOS PARAMETROS
-    const { id } = req.params;
-    // 2. OBTENER UN USUARIO POR SU ID Y QUE EL STATUS SEA TRUE
-    const user = await User.findOne({
-      where: {
-        status: true,
-        id,
-      },
-    });
-    //3. SI NO EXISTE UN USUARIO ENVIAR UN ERROR
-    if (!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found',
-      });
-    }
+exports.validIfExistUser = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
 
-    req.user = user;
-    next();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
+  const user = await User.findOne({
+    where: {
+      status: true,
+      id,
+    },
+  });
+
+  if (!user) {
+    return next(new AppError('User not found', 404));
   }
-};
 
-exports.validIfExistUserEmail = async (req, res, next) => {
-  try {
-    const { email } = req.body;
+  req.user = user;
+  next();
+});
 
-    const user = await User.findOne({
-      where: {
-        email: email.toLowerCase(),
-      },
-    });
+exports.validIfExistUserEmail = catchAsync(async (req, res, next) => {
+  const { email } = req.body;
 
-    if (user && !user.status) {
-      //TODO: lo que se deberia hacer es hacerle un update a true al estado de la cuenta
-      return res.status(400).json({
-        status: 'error',
-        message:
-          'El usuario tiene una cuenta, pero esta desactivida por favor hable con el administrador para activarla',
-      });
-    }
+  const user = await User.findOne({
+    where: {
+      email: email.toLowerCase(),
+    },
+  });
 
-    if (user) {
-      return res.status(400).json({
-        status: 'error',
-        message: 'The email user already exists',
-      });
-    }
-
-    next();
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
+  if (user && !user.status) {
+    //TODO: lo que se deberia hacer es hacerle un update a true al estado de la cuenta
+    return next(
+      new AppError(
+        'The user has an account, but it is deactivated please talk to the administrator to activate it',
+        400
+      )
+    );
   }
-};
+
+  if (user) {
+    return next(new AppError('The email user already exists', 400));
+  }
+
+  next();
+});

@@ -3,8 +3,6 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.createCategory = catchAsync(async (req, res, next) => {
   const { name } = req.body;
-  console.log('entro aca');
-  console.log(name);
 
   const category = await Category.create({ name });
 

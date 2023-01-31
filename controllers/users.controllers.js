@@ -1,52 +1,29 @@
 const User = require('../models/user.model');
+const catchAsync = require('../utils/catchAsync');
 
-const findUsers = async (req, res) => {
-  try {
-    // 1. BUSCAR TODOS LOS USUARIOS QUE ESTAN CON STATUS TRUE
-    const users = await User.findAll({
-      where: {
-        status: true,
-      },
-    });
+const findUsers = catchAsync(async (req, res) => {
+  const users = await User.findAll({
+    where: {
+      status: true,
+    },
+  });
 
-    // NOTA: NO ES NECESARIO ENVIAR MENSAJE DE ERROR SI NO HAY USUARIOS, DEBIDO A QUE EL DEVUELVE UN ARRAY VACIO
-    // LES PONGO UN EJEMPLO, SUPONGAMOS QUE USTEDES BUSCAN ALGUN PRODUCTO EN UNA TIENDA, Y ESE PRODUCTO NO SE ENCUENTRA,
-    // LA TIENDA NO LE ENVIA A USTED NINGUN MENSAJE DE ERROR, SIMPLEMENTE NO LE MUESTRA NADA, ES POR ESO QUE EN ESTE CASO
-    // PARA BUSCAR TODOS LOS USUARIOS NO ES NECESARIO DEVOLVER UN ERROR SI NO LOS ENCUENTRA, SIMPLEMENTE RETORNARA UN ARREGLO VACIO
+  res.status(200).json({
+    status: 'success',
+    message: 'Users was found successfully',
+    users,
+  });
+});
 
-    // 2. ENVIAR UNA RESPUESTA AL USUARIO
-    res.status(200).json({
-      status: 'success',
-      message: 'Users was found successfully',
-      users,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+const findUser = catchAsync(async (req, res) => {
+  const { user } = req;
 
-const findUser = async (req, res) => {
-  try {
-    const { user } = req;
-
-    // 4. ENVIAR UNA RESPUESTA AL USUARIO
-    res.status(200).json({
-      status: 'success',
-      message: 'User was found successfully',
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'User was found successfully',
+    user,
+  });
+});
 
 const createUser = async (req, res) => {
   try {
@@ -82,45 +59,28 @@ const createUser = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
-  try {
-    // 2. OBTENER LA INFORMACION A ACTUALIZAR DE LA REQ.BODY
-    const { username, email } = req.body;
-    const { user } = req;
+const updateUser = catchAsync(async (req, res) => {
+  const { username, email } = req.body;
+  const { user } = req;
 
-    // 5. REALIZAR LA ACTUALIZACIÓN DEL USUARIO, CAMPOS USERNAME, EMAIL
-    await user.update({ username, email });
+  await user.update({ username, email });
 
-    // 6. ENVIAR UNA RESPUESTA AL CLIENTE
-    res.status(200).json({
-      status: 'success',
-      message: 'User updated successfully',
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'User updated successfully',
+  });
+});
 
-const deleteUser = async (req, res) => {
-  try {
-    const { user } = req;
-    // 4. REALIZAR LA ACTUALIZACIÓN DEL STATUS DEL USUARIO ENCONTRADO ANTERIORMENTE
-    await user.update({ status: false });
-    // 5. ENVIAR UNA RESPUESTA AL CLIENTE
-    res.status(200).json({
-      status: 'success',
-      message: 'User deleted successfully',
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal server error',
-    });
-  }
-};
+const deleteUser = catchAsync(async (req, res) => {
+  const { user } = req;
+
+  await user.update({ status: false });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'User deleted successfully',
+  });
+});
 
 module.exports = {
   findUsers,
