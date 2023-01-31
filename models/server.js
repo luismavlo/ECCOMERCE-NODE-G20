@@ -5,6 +5,8 @@ const { usersRouter } = require('../routes/user.routes');
 const { db } = require('../database/db');
 const morgan = require('morgan');
 const { categoriesRouter } = require('../routes/categories.routes');
+const globalErrorHandler = require('../controllers/error.controller');
+const AppError = require('../utils/appError');
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -51,6 +53,21 @@ class Server {
     this.app.use(this.paths.user, usersRouter);
     //utilizar las rutas de categorias
     this.app.use(this.paths.categories, categoriesRouter);
+
+    // this.app.all('*', (req, res, next) => {
+    //   res.status(404).json({
+    //     status: 'error',
+    //     message: `Can't find ${req.originalUrl} on this server!`,
+    //   });
+    // });
+
+    this.app.all('*', (req, res, next) => {
+      return next(
+        new AppError(`Can't find ${req.originalUrl} on this server!`, 404)
+      );
+    });
+
+    this.app.use(globalErrorHandler);
   }
 
   database() {

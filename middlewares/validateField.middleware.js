@@ -1,5 +1,7 @@
 const { validationResult } = require('express-validator');
 
+//CAPTURAR LOS ERRORES QUE VENGAN DE LOS CHECK
+//SI EXISTE ALGUN ERROR ENVIA LOS ERRORES
 exports.validateFields = (req, res, next) => {
   const errors = validationResult(req);
 

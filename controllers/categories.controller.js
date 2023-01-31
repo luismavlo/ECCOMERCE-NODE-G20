@@ -1,100 +1,65 @@
 const Category = require('../models/category.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.createCategory = async (req, res) => {
-  try {
-    const { name } = req.body;
+exports.createCategory = catchAsync(async (req, res, next) => {
+  const { name } = req.body;
+  console.log('entro aca');
+  console.log(name);
 
-    const category = await Category.create({ name });
+  const category = await Category.create({ name });
 
-    res.status(201).json({
-      status: 'success',
-      message: 'Category created successfully',
-      category,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success',
+    message: 'Category created successfully',
+    category,
+  });
+});
 
-exports.findCategories = async (req, res) => {
-  try {
-    const categories = await Category.findAll({
-      where: {
-        status: true,
-      },
-    });
+exports.findCategories = catchAsync(async (req, res, next) => {
+  const categories = await Category.findAll({
+    where: {
+      status: true,
+    },
+  });
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Categories fetched successfully',
-      categories,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'Categories fetched successfully',
+    categories,
+  });
+});
 
-exports.findCategory = async (req, res) => {
-  try {
-    const { category } = req;
+exports.findCategory = catchAsync(async (req, res, next) => {
+  const { category } = req;
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Category fetched successfully',
-      category,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    message: 'Category fetched successfully',
+    category,
+  });
+});
 
-exports.updateCategory = async (req, res) => {
-  try {
-    const { name } = req.body;
-    const { category } = req;
+exports.updateCategory = catchAsync(async (req, res, next) => {
+  const { name } = req.body;
+  const { category } = req;
 
-    await category.update({ name });
+  console.log(category);
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Category updated successfully',
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  await category.update({ name });
 
-exports.deleteCategory = async (req, res) => {
-  try {
-    const { category } = req;
+  res.status(200).json({
+    status: 'success',
+    message: 'Category updated successfully',
+  });
+});
 
-    await category.update({ status: false });
+exports.deleteCategory = catchAsync(async (req, res, next) => {
+  const { category } = req;
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Category deleted successfully',
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Internal Server Error',
-    });
-  }
-};
+  await category.update({ status: false });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Category deleted successfully',
+  });
+});

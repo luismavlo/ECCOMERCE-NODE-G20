@@ -1,4 +1,5 @@
 const Product = require('../models/product.model');
+const AppError = require('../utils/appError');
 
 exports.validProductById = async (req, res, next) => {
   try {
@@ -15,10 +16,7 @@ exports.validProductById = async (req, res, next) => {
     console.log(req);
 
     if (!product) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Product not found',
-      });
+      return next(new AppError('Product not found', 404));
     }
 
     req.product = product;
