@@ -48,10 +48,3 @@ const globalErrorHandler = (err, req, res, next) => {
 };
 
 module.exports = globalErrorHandler;
-
-// if (error.parent.code === '22P02') {
-//   return res.status(400).json({
-//     status: 'error',
-//     message: 'Invalid DataType in your request',
-//   });
-// }
