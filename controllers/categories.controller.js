@@ -41,8 +41,6 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
   const { name } = req.body;
   const { category } = req;
 
-  console.log(category);
-
   await category.update({ name });
 
   res.status(200).json({
