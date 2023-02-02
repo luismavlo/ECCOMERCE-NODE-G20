@@ -23,7 +23,7 @@ router.post(
 router.post(
   '/login',
   [
-    check('username', 'The username must be mandatory').not().isEmpty(),
+    check('email', 'The email must be mandatory').not().isEmpty(),
     check('password', 'The password must be mandatory').not().isEmpty(),
     validateFields,
   ],

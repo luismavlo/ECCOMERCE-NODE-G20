@@ -39,8 +39,13 @@ exports.login = catchAsync(async (req, res, next) => {
   const user = await User.findOne({
     where: {
       email,
+      status: true,
     },
   });
+
+  if (!user) {
+    return next(new AppError('The user could not be found', 404));
+  }
 
   if (!(await bcrypt.compare(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));

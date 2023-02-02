@@ -5,6 +5,7 @@ const {
   deleteUser,
   findUsers,
   findUser,
+  resetPassword,
 } = require('../controllers/users.controllers');
 const {
   validIfExistUser,
@@ -28,6 +29,17 @@ router.patch(
     validIfExistUser,
   ],
   updateUser
+);
+
+router.patch(
+  '/password/:id',
+  [
+    check('confirmPassword', 'The password is required').not().isEmpty(),
+    check('newPassword', 'The new password is required').not().isEmpty(),
+    validateFields,
+    validIfExistUser,
+  ],
+  resetPassword
 );
 
 router.delete('/:id', validIfExistUser, deleteUser);
