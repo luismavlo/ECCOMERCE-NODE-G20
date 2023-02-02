@@ -41,8 +41,12 @@ const globalErrorHandler = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
-    console.log(error);
-    if (error.parent.code === '22P02') error = handleCastError22P02(error);
+
+    if (!error.parent?.code) {
+      error = err;
+    }
+
+    if (error.parent?.code === '22P02') error = handleCastError22P02(error);
 
     sendErrorProd(error, res);
   }
