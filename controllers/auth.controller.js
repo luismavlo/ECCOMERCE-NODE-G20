@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcryptjs');
 const AppError = require('../utils/appError');
+const generateJWT = require('../utils/jwt');
 
 exports.register = catchAsync(async (req, res) => {
   const { username, email, password, role } = req.body;
@@ -54,6 +55,7 @@ exports.login = catchAsync(async (req, res, next) => {
     token,
     user: {
       name: user.name,
+      email: user.email,
       id: user.id,
       role: user.role,
     },

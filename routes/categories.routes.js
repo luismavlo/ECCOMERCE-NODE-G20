@@ -7,6 +7,7 @@ const {
   updateCategory,
   deleteCategory,
 } = require('../controllers/categories.controller');
+const { protect } = require('../middlewares/auth.middleware');
 const { validCategoryById } = require('../middlewares/category.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -18,7 +19,11 @@ router.get('/:id', validCategoryById, findCategory);
 
 router.post(
   '/',
-  [check('name', 'The name is required').not().isEmpty(), validateFields],
+  [
+    check('name', 'The name is required').not().isEmpty(),
+    validateFields,
+    protect,
+  ],
   createCategory
 );
 

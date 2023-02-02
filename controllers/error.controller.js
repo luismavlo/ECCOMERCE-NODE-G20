@@ -14,6 +14,9 @@ const sendErrorDev = (err, res) => {
   });
 };
 
+const handleJWTError = err =>
+  new AppError('Invalid Token. Please login again.', 401);
+
 const sendErrorProd = (err, res) => {
   //Operational, trusted error: send message to client
   if (err.isOperational) {
@@ -42,6 +45,7 @@ const globalErrorHandler = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'production') {
     let error = { ...err };
     if (error.parent.code === '22P02') error = handleCastError22P02(error);
+    if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
 
     sendErrorProd(error, res);
   }

@@ -8,7 +8,7 @@ const generateJWT = id => {
       payload,
       process.env.SECRET_JWT_SEED,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: `${process.env.JWT_EXPIRE_IN}`,
       },
       (err, token) => {
         if (err) {
