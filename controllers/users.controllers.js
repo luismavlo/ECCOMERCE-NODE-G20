@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 
-const findUsers = catchAsync(async (req, res) => {
+exports.findUsers = catchAsync(async (req, res) => {
   const users = await User.findAll({
     where: {
       status: true,
@@ -15,7 +15,7 @@ const findUsers = catchAsync(async (req, res) => {
   });
 });
 
-const findUser = catchAsync(async (req, res) => {
+exports.findUser = catchAsync(async (req, res) => {
   const { user } = req;
 
   res.status(200).json({
@@ -25,7 +25,7 @@ const findUser = catchAsync(async (req, res) => {
   });
 });
 
-const updateUser = catchAsync(async (req, res) => {
+exports.updateUser = catchAsync(async (req, res) => {
   const { username, email } = req.body;
   const { user } = req;
 
@@ -37,7 +37,7 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
-const deleteUser = catchAsync(async (req, res) => {
+exports.deleteUser = catchAsync(async (req, res) => {
   const { user } = req;
 
   await user.update({ status: false });
@@ -47,10 +47,3 @@ const deleteUser = catchAsync(async (req, res) => {
     message: 'User deleted successfully',
   });
 });
-
-module.exports = {
-  findUsers,
-  findUser,
-  updateUser,
-  deleteUser,
-};
