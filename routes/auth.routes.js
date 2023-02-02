@@ -1,34 +1,24 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const {
-  updateUser,
-  deleteUser,
-  findUsers,
-  findUser,
-} = require('../controllers/users.controllers');
-const { validIfExistUser } = require('../middlewares/user.middleware');
+const { createUser } = require('../controllers/auth.controller');
+const { validIfExistUserEmail } = require('../middlewares/user.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
 const router = Router();
 
-router.get('/', findUsers);
-
-router.get('/:id', validIfExistUser, findUser);
-
-router.patch(
-  '/:id',
+router.post(
+  '/signup',
   [
     check('username', 'The username must be mandatory').not().isEmpty(),
     check('email', 'The email must be mandatory').not().isEmpty(),
     check('email', 'The email must be a correct format').isEmail(),
+    check('password', 'The password must be mandatory').not().isEmpty(),
     validateFields,
-    validIfExistUser,
+    validIfExistUserEmail,
   ],
-  updateUser
+  createUser
 );
 
-router.delete('/:id', validIfExistUser, deleteUser);
-
 module.exports = {
-  usersRouter: router,
+  authRouter: router,
 };

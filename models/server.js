@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const { categoriesRouter } = require('../routes/categories.routes');
 const globalErrorHandler = require('../controllers/error.controller');
 const AppError = require('../utils/appError');
+const { authRouter } = require('../routes/auth.routes');
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -21,6 +22,7 @@ class Server {
       user: '/api/v1/user',
       products: '/api/v1/products',
       categories: '/api/v1/categories',
+      auth: '/api/v1/auth',
     };
 
     //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS
@@ -53,6 +55,8 @@ class Server {
     this.app.use(this.paths.user, usersRouter);
     //utilizar las rutas de categorias
     this.app.use(this.paths.categories, categoriesRouter);
+    //utilizar las rutas de autenticacion
+    this.app.use(this.paths.auth, authRouter);
 
     this.app.all('*', (req, res, next) => {
       return next(
