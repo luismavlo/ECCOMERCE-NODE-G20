@@ -21,6 +21,7 @@ class Server {
       user: '/api/v1/user',
       products: '/api/v1/products',
       categories: '/api/v1/categories',
+      auth: '/api/v1/auth',
     };
 
     //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS

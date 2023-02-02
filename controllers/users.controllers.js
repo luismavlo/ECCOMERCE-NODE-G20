@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
+const bcryptjs = require('bcryptjs');
+const generateJWT = require('../utils/jwt');
 
 const findUsers = catchAsync(async (req, res) => {
   const users = await User.findAll({
@@ -21,23 +23,6 @@ const findUser = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'User was found successfully',
-    user,
-  });
-});
-
-const createUser = catchAsync(async (req, res) => {
-  const { username, email, password, role = 'user' } = req.body;
-
-  const user = await User.create({
-    username: username.toLowerCase(),
-    email: email.toLowerCase(),
-    password,
-    role,
-  });
-
-  res.status(201).json({
-    status: 'success',
-    message: 'User created successfully',
     user,
   });
 });
@@ -68,7 +53,6 @@ const deleteUser = catchAsync(async (req, res) => {
 module.exports = {
   findUsers,
   findUser,
-  createUser,
   updateUser,
   deleteUser,
 };
