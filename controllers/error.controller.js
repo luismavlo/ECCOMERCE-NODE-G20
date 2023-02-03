@@ -1,10 +1,5 @@
 const AppError = require('../utils/appError');
 
-const handleCastError22P02 = err => {
-  const message = 'Some type of data send does not match was expected';
-  return new AppError(message, 400);
-};
-
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -13,6 +8,9 @@ const sendErrorDev = (err, res) => {
     stack: err.stack,
   });
 };
+
+const handleCastError22P02 = () =>
+  new AppError('Some type of data send does not match was expected', 400);
 
 const handleJWTError = () =>
   new AppError('Invalid Token. Please login again!', 401);
