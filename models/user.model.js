@@ -26,6 +26,10 @@ const User = db.define('user', {
     allowNull: false,
     defaultValue: 'user',
   },
+  passwordChangedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

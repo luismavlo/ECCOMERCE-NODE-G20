@@ -1,9 +1,12 @@
 const AppError = require('../utils/appError');
 
-const handleCastError22P02 = err => {
+const handleCastError22P02 = () => {
   const message = 'Some type of data send does not match was expected';
   return new AppError(message, 400);
 };
+
+const handleJWTError = () =>
+  new AppError('Invalid Token. Please login again!', 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
@@ -47,6 +50,7 @@ const globalErrorHandler = (err, req, res, next) => {
     }
 
     if (error.parent?.code === '22P02') error = handleCastError22P02(error);
+    if (error.name === 'JsonWebTokenError') error = handleJWTError(error);
 
     sendErrorProd(error, res);
   }

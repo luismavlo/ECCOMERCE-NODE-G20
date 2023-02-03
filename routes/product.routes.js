@@ -7,6 +7,7 @@ const {
   deleteProduct,
   findProduct,
 } = require('../controllers/product.controller');
+const { protect } = require('../middlewares/auth.middleware');
 const { validProductById } = require('../middlewares/products.middlewares');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -30,6 +31,7 @@ router.post(
     check('userId', 'The userId is required').not().isEmpty(),
     check('userId', 'The userId must be a number').isNumeric(),
     validateFields,
+    protect,
   ],
   createProduct
 );
