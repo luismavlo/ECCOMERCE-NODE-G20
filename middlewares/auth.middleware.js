@@ -40,6 +40,32 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //4. Check if user changed password after token was issued
+  if (user.passwordChangedAt) {
+    const changedTimeStamp = parseInt(
+      user.passwordChangedAt.getTime() / 1000,
+      10
+    );
+
+    if (decoded.iat < changedTimeStamp) {
+      return next(
+        new AppError(
+          'User recently changed password!, please login again.',
+          401
+        )
+      );
+    }
+  }
+
+  req.sessionUser = user;
+  next();
+});
+
+exports.protectAccountOwner = catchAsync(async (req, res, next) => {
+  const { user, sessionUser } = req;
+
+  if (user.id !== sessionUser.id) {
+    return next(new AppError('You do not own this account.', 401));
+  }
+
   next();
 });

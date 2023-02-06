@@ -17,13 +17,11 @@ router.get('/', findCategories);
 
 router.get('/:id', validCategoryById, findCategory);
 
+router.use(protect);
+
 router.post(
   '/',
-  [
-    check('name', 'The name is required').not().isEmpty(),
-    validateFields,
-    protect,
-  ],
+  [check('name', 'The name is required').not().isEmpty(), validateFields],
   createCategory
 );
 

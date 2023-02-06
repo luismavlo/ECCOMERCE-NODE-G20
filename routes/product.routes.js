@@ -17,6 +17,8 @@ router.get('/', findProducts);
 
 router.get('/:id', validProductById, findProduct);
 
+router.use(protect);
+
 router.post(
   '/',
   [
@@ -31,7 +33,6 @@ router.post(
     check('userId', 'The userId is required').not().isEmpty(),
     check('userId', 'The userId must be a number').isNumeric(),
     validateFields,
-    protect,
   ],
   createProduct
 );

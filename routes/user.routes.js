@@ -7,6 +7,10 @@ const {
   findUser,
   updatePassword,
 } = require('../controllers/users.controllers');
+const {
+  protect,
+  protectAccountOwner,
+} = require('../middlewares/auth.middleware');
 const { validIfExistUser } = require('../middlewares/user.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -16,6 +20,8 @@ router.get('/', findUsers);
 
 router.get('/:id', validIfExistUser, findUser);
 
+router.use(protect);
+
 router.patch(
   '/:id',
   [
@@ -24,6 +30,7 @@ router.patch(
     check('email', 'The email must be a correct format').isEmail(),
     validateFields,
     validIfExistUser,
+    protectAccountOwner,
   ],
   updateUser
 );
@@ -37,11 +44,12 @@ router.patch(
     check('newPassword', 'The new password must be mandatory').not().isEmpty(),
     validateFields,
     validIfExistUser,
+    protectAccountOwner,
   ],
   updatePassword
 );
 
-router.delete('/:id', validIfExistUser, deleteUser);
+router.delete('/:id', validIfExistUser, protectAccountOwner, deleteUser);
 
 module.exports = {
   usersRouter: router,
