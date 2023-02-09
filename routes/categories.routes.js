@@ -7,7 +7,7 @@ const {
   updateCategory,
   deleteCategory,
 } = require('../controllers/categories.controller');
-const { protect } = require('../middlewares/auth.middleware');
+const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const { validCategoryById } = require('../middlewares/category.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -21,7 +21,11 @@ router.use(protect);
 
 router.post(
   '/',
-  [check('name', 'The name is required').not().isEmpty(), validateFields],
+  [
+    check('name', 'The name is required').not().isEmpty(),
+    validateFields,
+    restrictTo('admin'),
+  ],
   createCategory
 );
 
@@ -31,11 +35,12 @@ router.patch(
     check('name', 'The name is required').not().isEmpty(),
     validateFields,
     validCategoryById,
+    restrictTo('admin'),
   ],
   updateCategory
 );
 
-router.delete('/:id', validCategoryById, deleteCategory);
+router.delete('/:id', validCategoryById, restrictTo('admin'), deleteCategory);
 
 module.exports = {
   categoriesRouter: router,

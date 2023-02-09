@@ -1,13 +1,19 @@
-const express = require('express');
-const { productRouter } = require('../routes/product.routes');
 const cors = require('cors');
-const { usersRouter } = require('../routes/user.routes');
-const { db } = require('../database/db');
+const express = require('express');
+const helmet = require('helmet');
+const hpp = require('hpp');
 const morgan = require('morgan');
-const { categoriesRouter } = require('../routes/categories.routes');
-const globalErrorHandler = require('../controllers/error.controller');
-const AppError = require('../utils/appError');
+const rateLimit = require('express-rate-limit');
+const xss = require('xss-clean');
+
 const { authRouter } = require('../routes/auth.routes');
+const { categoriesRouter } = require('../routes/categories.routes');
+const { db } = require('../database/db');
+const { productRouter } = require('../routes/product.routes');
+const { usersRouter } = require('../routes/user.routes');
+const AppError = require('../utils/appError');
+const globalErrorHandler = require('../controllers/error.controller');
+
 //1. CREAMOS UNA CLASE
 
 class Server {
@@ -16,13 +22,17 @@ class Server {
     this.app = express();
     //DEFINIMOS EL PUERTO QUE LO TENEMOS EN LOS ENVIROMENTS
     this.port = process.env.PORT || 3000;
-
+    this.limiter = rateLimit({
+      max: 100,
+      windowMs: 60 * 60 * 1000,
+      message: 'Too many request from this IP, please try again in an hour!',
+    });
     //DEFINIMOS LOS PATHS DE NUESTRA APLICACIÓN
     this.paths = {
-      user: '/api/v1/user',
-      products: '/api/v1/products',
-      categories: '/api/v1/categories',
       auth: '/api/v1/auth',
+      categories: '/api/v1/categories',
+      products: '/api/v1/products',
+      user: '/api/v1/user',
     };
 
     //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS
@@ -37,10 +47,16 @@ class Server {
 
   //MIDDLEWARES
   middlewares() {
+    this.app.use(helmet());
+
+    this.app.use(xss());
+
+    this.app.use(hpp());
+
     if (process.env.NODE_ENV === 'development') {
       this.app.use(morgan('dev'));
     }
-
+    this.app.use('/api/v1', this.limiter);
     //UTILIZAMOS LAS CORS PARA PERMITIR ACCESSO A LA API
     this.app.use(cors());
     //UTILIZAMOS EXPRESS.JSON PARA PARSEAR EL BODY DE LA REQUEST
@@ -49,14 +65,14 @@ class Server {
 
   //RUTAS
   routes() {
+    //utilizar las rutas de autenticacion
+    this.app.use(this.paths.auth, authRouter);
+    //utilizar las rutas de categorias
+    this.app.use(this.paths.categories, categoriesRouter);
     //utilizar las rutas de productos
     this.app.use(this.paths.products, productRouter);
     //utilizar las rutas de usuarios
     this.app.use(this.paths.user, usersRouter);
-    //utilizar las rutas de categorias
-    this.app.use(this.paths.categories, categoriesRouter);
-    //utilizar las rutas de autenticacion
-    this.app.use(this.paths.auth, authRouter);
 
     this.app.all('*', (req, res, next) => {
       return next(

@@ -7,7 +7,7 @@ const {
   deleteProduct,
   findProduct,
 } = require('../controllers/product.controller');
-const { protect } = require('../middlewares/auth.middleware');
+const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const { validProductById } = require('../middlewares/products.middlewares');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -33,6 +33,7 @@ router.post(
     check('userId', 'The userId is required').not().isEmpty(),
     check('userId', 'The userId must be a number').isNumeric(),
     validateFields,
+    restrictTo('admin'),
   ],
   createProduct
 );
@@ -48,11 +49,12 @@ router.patch(
     check('price', 'The price must be a number').isNumeric(),
     validateFields,
     validProductById,
+    restrictTo('admin'),
   ],
   updateProduct
 );
 
-router.delete('/:id', validProductById, deleteProduct);
+router.delete('/:id', validProductById, restrictTo('admin'), deleteProduct);
 
 module.exports = {
   productRouter: router,
