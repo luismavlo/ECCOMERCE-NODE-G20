@@ -1,6 +1,11 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createUser, login } = require('../controllers/auth.controller');
+const {
+  createUser,
+  login,
+  renewToken,
+} = require('../controllers/auth.controller');
+const { protect } = require('../middlewares/auth.middleware');
 const { validIfExistUserEmail } = require('../middlewares/user.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -29,6 +34,10 @@ router.post(
   ],
   login
 );
+
+router.use(protect);
+
+router.get('/renew', renewToken);
 
 module.exports = {
   authRouter: router,
