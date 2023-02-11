@@ -1,4 +1,6 @@
 const Category = require('../models/category.model');
+const Product = require('../models/product.model');
+const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 
 exports.createCategory = catchAsync(async (req, res, next) => {
@@ -15,9 +17,19 @@ exports.createCategory = catchAsync(async (req, res, next) => {
 
 exports.findCategories = catchAsync(async (req, res, next) => {
   const categories = await Category.findAll({
+    attributes: ['id', 'name'],
     where: {
       status: true,
     },
+    include: [
+      {
+        model: Product,
+        attributes: { exclude: ['createdAt', 'updatedAt', 'status'] },
+        where: {
+          status: true,
+        },
+      },
+    ],
   });
 
   res.status(200).json({

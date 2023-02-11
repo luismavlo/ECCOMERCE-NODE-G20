@@ -13,6 +13,8 @@ const { productRouter } = require('../routes/product.routes');
 const { usersRouter } = require('../routes/user.routes');
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/error.controller');
+const initModel = require('./init.model');
+const { cartRouter } = require('../routes/cart.routes');
 
 //1. CREAMOS UNA CLASE
 
@@ -30,6 +32,7 @@ class Server {
     //DEFINIMOS LOS PATHS DE NUESTRA APLICACIÓN
     this.paths = {
       auth: '/api/v1/auth',
+      cart: '/api/v1/cart',
       categories: '/api/v1/categories',
       products: '/api/v1/products',
       user: '/api/v1/user',
@@ -67,6 +70,8 @@ class Server {
   routes() {
     //utilizar las rutas de autenticacion
     this.app.use(this.paths.auth, authRouter);
+    //utilizar las rutas de cart
+    this.app.use(this.paths.cart, cartRouter);
     //utilizar las rutas de categorias
     this.app.use(this.paths.categories, categoriesRouter);
     //utilizar las rutas de productos
@@ -87,6 +92,9 @@ class Server {
     db.authenticate()
       .then(() => console.log('Database authenticated'))
       .catch(error => console.log(error));
+
+    // relations
+    initModel();
 
     db.sync()
       .then(() => console.log('Database synced'))
