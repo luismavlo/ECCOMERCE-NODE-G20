@@ -1,7 +1,11 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 const { addProductToCart } = require('../controllers/cart.controller');
-const { validExistCart } = require('../middlewares/cart.middleware');
+const { protect } = require('../middlewares/auth.middleware');
+const {
+  validExistCart,
+  ValidExistProductInCart,
+} = require('../middlewares/cart.middleware');
 const {
   validBodyProductById,
   validIfExistProductsInStock,
@@ -9,6 +13,8 @@ const {
 const { validateFields } = require('../middlewares/validateField.middleware');
 
 const router = Router();
+
+router.use(protect);
 
 router.post(
   '/add-product',
@@ -21,6 +27,7 @@ router.post(
     validBodyProductById,
     validIfExistProductsInStock,
     validExistCart,
+    ValidExistProductInCart,
   ],
   addProductToCart
 );

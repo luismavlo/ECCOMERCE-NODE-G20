@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 
 const { authRouter } = require('../routes/auth.routes');
+const { cartRouter } = require('../routes/cart.routes');
 const { categoriesRouter } = require('../routes/categories.routes');
 const { db } = require('../database/db');
 const { productRouter } = require('../routes/product.routes');
@@ -14,7 +15,6 @@ const { usersRouter } = require('../routes/user.routes');
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/error.controller');
 const initModel = require('./init.model');
-const { cartRouter } = require('../routes/cart.routes');
 
 //1. CREAMOS UNA CLASE
 
