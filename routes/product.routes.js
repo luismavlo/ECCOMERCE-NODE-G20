@@ -8,7 +8,7 @@ const {
   findProduct,
 } = require('../controllers/product.controller');
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
-const { validProductById } = require('../middlewares/products.middlewares');
+const { validProductById } = require('../middlewares/products.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
 const router = Router();

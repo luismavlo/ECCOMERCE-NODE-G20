@@ -9,7 +9,7 @@ const {
 const {
   validBodyProductById,
   validIfExistProductsInStock,
-} = require('../middlewares/products.middlewares');
+} = require('../middlewares/products.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
 const router = Router();

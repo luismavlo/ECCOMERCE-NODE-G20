@@ -6,7 +6,7 @@ const {
   findUsers,
   findUser,
   updatePassword,
-} = require('../controllers/users.controllers');
+} = require('../controllers/users.controller');
 const {
   protect,
   protectAccountOwner,
