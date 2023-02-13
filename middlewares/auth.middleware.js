@@ -4,8 +4,8 @@ const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user.model');
 
+/* A middleware function that is used to protect routes. */
 exports.protect = catchAsync(async (req, res, next) => {
-  //1. Getting token and check of it's there
   let token;
   if (
     req.headers.authorization &&
@@ -20,13 +20,11 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //2. verification token
   const decoded = await promisify(jwt.verify)(
     token,
     process.env.SECRET_JWT_SEED
   );
 
-  //3 check if user still exist
   const user = await User.findOne({
     where: {
       id: decoded.id,
@@ -60,6 +58,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* A middleware function that is used to protect routes. */
 exports.protectAccountOwner = catchAsync(async (req, res, next) => {
   const { user, sessionUser } = req;
 
@@ -70,6 +69,7 @@ exports.protectAccountOwner = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* A middleware function that is used to restrict access to certain roles. */
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.sessionUser.role)) {

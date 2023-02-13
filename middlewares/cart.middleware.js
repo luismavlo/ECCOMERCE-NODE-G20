@@ -3,6 +3,7 @@ const ProductInCart = require('../models/prodictInCart.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+/* Checking if the user has a cart. If not, it will create one. */
 exports.validExistCart = catchAsync(async (req, res, next) => {
   const { sessionUser } = req;
 
@@ -21,6 +22,8 @@ exports.validExistCart = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* A middleware function that checks if the product is already in the cart. If it is, it will update
+the status to active and the quantity to 1. If it is not, it will return an error. */
 exports.ValidExistProductInCart = catchAsync(async (req, res, next) => {
   const { product, cart } = req;
 

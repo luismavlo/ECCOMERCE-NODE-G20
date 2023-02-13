@@ -3,6 +3,7 @@ const Product = require('../models/product.model');
 const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 
+/* Creating a category. */
 exports.createCategory = catchAsync(async (req, res, next) => {
   const { name } = req.body;
 
@@ -15,6 +16,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+/* Fetching all the categories and their products. */
 exports.findCategories = catchAsync(async (req, res, next) => {
   const categories = await Category.findAll({
     attributes: ['id', 'name'],
@@ -39,6 +41,7 @@ exports.findCategories = catchAsync(async (req, res, next) => {
   });
 });
 
+/* This is a middleware function that is used to fetch a category by its id. */
 exports.findCategory = catchAsync(async (req, res, next) => {
   const { category } = req;
 
@@ -49,6 +52,7 @@ exports.findCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+/* This is a middleware function that is used to fetch a category by its id. */
 exports.updateCategory = catchAsync(async (req, res, next) => {
   const { name } = req.body;
   const { category } = req;
@@ -61,6 +65,7 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
   });
 });
 
+/* Deleting the category. */
 exports.deleteCategory = catchAsync(async (req, res, next) => {
   const { category } = req;
 

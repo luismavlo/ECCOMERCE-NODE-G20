@@ -4,17 +4,17 @@ const bcrypt = require('bcryptjs');
 const generateJWT = require('../utils/jwt');
 const AppError = require('../utils/appError');
 
+/* A function that creates a user. */
 exports.createUser = catchAsync(async (req, res, next) => {
   const { username, email, password, role = 'user' } = req.body;
 
-  //1. crear una instancia de la clase user
   const user = new User({ username, email, password, role });
-  //2. encriptar la contraseña
+  
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(password, salt);
-  //3. guardar en la base de datos con las contraseñas encriptadas
+  
   await user.save();
-  //4. generar el jwt
+  
   const token = await generateJWT(user.id);
 
   res.status(201).json({
@@ -30,10 +30,11 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 });
 
+
+/* A function that is used to login a user. */
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
-  //1. Check if user exist && password is correct
   const user = await User.findOne({
     where: {
       email: email.toLowerCase(),
@@ -49,7 +50,6 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password', 401));
   }
 
-  //2. if everything ok, send token to client
   const token = await generateJWT(user.id);
 
   res.status(200).json({
@@ -64,6 +64,8 @@ exports.login = catchAsync(async (req, res, next) => {
   });
 });
 
+
+/* A function that is used to renew a token. */
 exports.renewToken = catchAsync(async (req, res, next) => {
   const { id } = req.sessionUser;
 

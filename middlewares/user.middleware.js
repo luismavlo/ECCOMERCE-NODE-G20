@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+/* A middleware that validates if the user exists in the database. */
 exports.validIfExistUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
@@ -20,6 +21,7 @@ exports.validIfExistUser = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* A middleware that validates if the user exists in the database. */
 exports.validIfExistUserEmail = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 

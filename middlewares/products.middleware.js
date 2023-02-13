@@ -2,6 +2,7 @@ const Product = require('../models/product.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+/* A middleware that checks if the productId is valid. */
 exports.validProductById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
@@ -20,6 +21,7 @@ exports.validProductById = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* Checking if the productId is valid. */
 exports.validBodyProductById = catchAsync(async (req, res, next) => {
   const { productId } = req.body;
 
@@ -38,6 +40,7 @@ exports.validBodyProductById = catchAsync(async (req, res, next) => {
   next();
 });
 
+/* A middleware that checks if there are enough products in stock. */
 exports.validIfExistProductsInStock = catchAsync(async (req, res, next) => {
   const { product } = req;
   const { quantity } = req.body;

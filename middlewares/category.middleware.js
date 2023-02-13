@@ -2,6 +2,7 @@ const Category = require('../models/category.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
+/* A middleware function that is used to validate the category id. */
 exports.validCategoryById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
