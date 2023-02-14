@@ -40,7 +40,7 @@ router.patch(
     validateFields,
     validCategoryById,
     restrictTo('admin'),
-    protectAccountOwner,
+    // protectAccountOwner,
   ],
   updateCategory
 );
@@ -49,7 +49,7 @@ router.delete(
   '/:id',
   validCategoryById,
   restrictTo('admin'),
-  protectAccountOwner,
+  // protectAccountOwner,
   deleteCategory
 );
 

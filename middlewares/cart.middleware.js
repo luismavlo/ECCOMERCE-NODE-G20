@@ -49,3 +49,62 @@ exports.ValidExistProductInCart = catchAsync(async (req, res, next) => {
   req.productInCart = productInCart;
   next();
 });
+
+exports.validExistProductInCartForUpdate = catchAsync(
+  async (req, res, next) => {
+    const { sessionUser } = req;
+    const { productId } = req.body;
+
+    const cart = await Cart.findOne({
+      where: {
+        userId: sessionUser.id,
+        status: 'active',
+      },
+    });
+
+    const productInCart = await ProductInCart.findOne({
+      where: {
+        cartId: cart.id,
+        productId,
+      },
+    });
+
+    if (!productInCart) {
+      return next(new AppError('The product does not exist in the cart', 400));
+    }
+
+    req.productInCart = productInCart;
+
+    next();
+  }
+);
+
+exports.validExistProductInCartByParamsForUpdate = catchAsync(
+  async (req, res, next) => {
+    const { sessionUser } = req;
+    const { productId } = req.params;
+
+    const cart = await Cart.findOne({
+      where: {
+        userId: sessionUser.id,
+        status: 'active',
+      },
+    });
+
+    const productInCart = await ProductInCart.findOne({
+      where: {
+        cartId: cart.id,
+        productId,
+        status: 'active',
+      },
+    });
+
+    if (!productInCart) {
+      return next(new AppError('The product does not exist in the cart', 400));
+    }
+
+    req.productInCart = productInCart;
+
+    next();
+  }
+);
