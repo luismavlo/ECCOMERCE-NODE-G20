@@ -1,4 +1,5 @@
 const Cart = require('../models/cart.model');
+const Order = require('../models/order.model');
 const ProductInCart = require('../models/prodictInCart.model');
 const Product = require('../models/product.model');
 const AppError = require('../utils/appError');
@@ -66,7 +67,7 @@ exports.buyProductOnCart = catchAsync(async (req, res, next) => {
     include: [
       {
         model: ProductInCart,
-        attributes: { exclude: ['status', 'createdAt', 'updatedAt'] },
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
         where: {
           status: 'active',
         },
@@ -80,6 +81,10 @@ exports.buyProductOnCart = catchAsync(async (req, res, next) => {
     ],
   });
 
+  if (!cart) {
+    return next(new AppError('There are not products in cart', 400));
+  }
+
   //2. calcular el precio total a pagar
   let totalPrice = 0;
 
@@ -90,21 +95,47 @@ exports.buyProductOnCart = catchAsync(async (req, res, next) => {
   //3. vamos a actualizar el stock o cantidad del modelo Product
   const purchasedProductPromises = cart.productInCarts.map(
     async productInCart => {
+      //1 buscar el producto para actualizar su información
       const product = await Product.findOne({
         where: {
           id: productInCart.productId,
         },
       });
-
+      //2 calcular la cantidad de productos que me quedan en la tiendan
+      //TODO: verificar cantidad para no agregar mas
       const newStock = product.quantity - productInCart.quantity;
-
+      //3 actualizabamos la informacion y la retornabamos
       return await product.update({ quantity: newStock });
     }
   );
 
   await Promise.all(purchasedProductPromises);
 
-  res.json({
-    cart,
+  const statusProductInCartPromises = cart.productInCarts.map(
+    async productInCart => {
+      const productInCartFoundIt = await ProductInCart.findOne({
+        where: {
+          id: productInCart.id,
+          status: 'active',
+        },
+      });
+
+      return await productInCartFoundIt.update({ status: 'purchased' });
+    }
+  );
+
+  await Promise.all(statusProductInCartPromises);
+
+  await cart.update({ status: 'purchased' });
+
+  const order = await Order.create({
+    userId: sessionUser.id,
+    cartId: cart.id,
+    totalPrice,
+  });
+
+  res.status(201).json({
+    message: 'The order has been generated succesfully',
+    order,
   });
 });
