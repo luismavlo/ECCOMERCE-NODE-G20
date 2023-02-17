@@ -2,6 +2,10 @@ const User = require('../models/user.model');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcryptjs');
+const Order = require('../models/order.model');
+const Cart = require('../models/cart.model');
+const ProductInCart = require('../models/prodictInCart.model');
+const { Op } = require('sequelize');
 
 exports.findUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({
@@ -69,5 +73,36 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     message: 'The user password was updated successfully',
+  });
+});
+
+exports.getOrders = catchAsync(async (req, res, next) => {
+  const { sessionUser } = req;
+
+  const orders = await Order.findAll({
+    where: {
+      userId: sessionUser.id,
+      status: true,
+    },
+    include: [
+      {
+        model: Cart,
+        where: {
+          status: 'purchased',
+        },
+        include: [
+          {
+            model: ProductInCart,
+            where: {
+              status: 'purchased',
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  res.status(200).json({
+    orders,
   });
 });

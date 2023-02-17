@@ -30,6 +30,7 @@ exports.findCategories = catchAsync(async (req, res, next) => {
         where: {
           status: true,
         },
+        //required: false, PARA QUE ME TRAIGA TODOS LAS CATEGORIAS SIN IMPORTAR QUE NO HALLAN PRODUCTOS
       },
     ],
   });
