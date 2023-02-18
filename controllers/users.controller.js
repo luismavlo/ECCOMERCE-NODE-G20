@@ -106,3 +106,35 @@ exports.getOrders = catchAsync(async (req, res, next) => {
     orders,
   });
 });
+
+exports.getOrder = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { sessionUser } = req;
+  //TODO: acordarme de hacer esta mejora o esta refactorización
+  const order = await Order.findOne({
+    where: {
+      userId: sessionUser.id,
+      id,
+      status: true,
+    },
+    include: [
+      {
+        model: Cart,
+        where: {
+          status: 'purchased',
+        },
+        include: [
+          {
+            model: ProductInCart,
+            where: {
+              status: 'purchased',
+            },
+          },
+        ],
+      },
+    ],
+  });
+  res.status(200).json({
+    order,
+  });
+});

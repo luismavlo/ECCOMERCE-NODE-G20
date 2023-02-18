@@ -30,6 +30,10 @@ const User = db.define('user', {
     type: DataTypes.DATE,
     allowNull: true,
   },
+  profileImageUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   status: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

@@ -7,6 +7,7 @@ const {
   findUser,
   updatePassword,
   getOrders,
+  getOrder,
 } = require('../controllers/users.controller');
 const {
   protect,
@@ -20,6 +21,8 @@ const router = Router();
 router.get('/', findUsers);
 
 router.get('/orders', protect, getOrders);
+
+router.get('/orders/:id', protect, getOrder);
 
 router.get('/:id', validIfExistUser, findUser);
 
