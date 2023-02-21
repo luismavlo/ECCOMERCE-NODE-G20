@@ -3,33 +3,44 @@ const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcryptjs');
 const generateJWT = require('../utils/jwt');
 const AppError = require('../utils/appError');
+const { ref, uploadBytes } = require('firebase/storage');
+const { storage } = require('../utils/firebase');
 
 /* A function that creates a user. */
 exports.createUser = catchAsync(async (req, res, next) => {
-  console.table(req.body);
-  console.log(req.file);
+  const { username, email, password, role = 'user' } = req.body;
 
-  res.json({
-    status: 'sucess',
+  const imgRef = ref(storage, `users/${Date.now()}-${req.file.originalname}`);
+  const imgUploaded = await uploadBytes(imgRef, req.file.buffer);
+
+  console.log(imgUploaded);
+
+  const user = new User({
+    username,
+    email,
+    password,
+    role,
+    profileImageUrl: imgUploaded.metadata.fullPath,
   });
 
-  // const { username, email, password, role = 'user' } = req.body;
-  // const user = new User({ username, email, password, role });
-  // const salt = await bcrypt.genSalt(10);
-  // user.password = await bcrypt.hash(password, salt);
-  // await user.save();
-  // const token = await generateJWT(user.id);
-  // res.status(201).json({
-  //   status: 'success',
-  //   message: 'User created successfully',
-  //   token,
-  //   user: {
-  //     id: user.id,
-  //     username: user.username,
-  //     email: user.email,
-  //     role: user.role,
-  //   },
-  // });
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(password, salt);
+
+  await user.save();
+  const token = await generateJWT(user.id);
+
+  res.status(201).json({
+    status: 'success',
+    message: 'User created successfully',
+    token,
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      profileImageUrl: user.profileImageUrl,
+    },
+  });
 });
 
 /* A function that is used to login a user. */

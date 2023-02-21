@@ -10,6 +10,7 @@ const {
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const { validProductById } = require('../middlewares/products.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
+const { upload } = require('../utils/multer');
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.use(protect);
 router.post(
   '/',
   [
+    upload.array('productImgs', 3),
     check('title', 'The title is required').not().isEmpty(),
     check('description', 'The description is required').not().isEmpty(),
     check('quantity', 'The quantity is required').not().isEmpty(),
