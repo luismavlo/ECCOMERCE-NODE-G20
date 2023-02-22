@@ -20,6 +20,10 @@ const {
   validExistProductIdByParams,
 } = require('../middlewares/products.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
+const {
+  addProductToCartValidation,
+  updateProductToCartValidation,
+} = require('../middlewares/validations.middleware');
 
 const router = Router();
 
@@ -28,10 +32,7 @@ router.use(protect);
 router.post(
   '/add-product',
   [
-    check('productId', 'The producId is required').not().isEmpty(),
-    check('productId', 'The producId must be a number').isNumeric(),
-    check('quantity', 'The quantity is required').not().isEmpty(),
-    check('quantity', 'The quantity must be a number').isNumeric(),
+    addProductToCartValidation,
     validateFields,
     validBodyProductById,
     validIfExistProductsInStock,
@@ -44,10 +45,7 @@ router.post(
 router.patch(
   '/update-cart',
   [
-    check('productId', 'The producId is required').not().isEmpty(),
-    check('productId', 'The producId must be a number').isNumeric(),
-    check('newQty', 'The quantity is required').not().isEmpty(),
-    check('newQty', 'The quantity must be a number').isNumeric(),
+    updateProductToCartValidation,
     validateFields,
     validBodyProductById,
     validExistProductInStockForUpdate,

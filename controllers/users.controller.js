@@ -9,6 +9,7 @@ const { Op } = require('sequelize');
 const { ref, getDownloadURL } = require('firebase/storage');
 const { storage } = require('../utils/firebase');
 
+/* A function that is being exported. */
 exports.findUsers = catchAsync(async (req, res, next) => {
   const users = await User.findAll({
     where: {
@@ -34,6 +35,7 @@ exports.findUsers = catchAsync(async (req, res, next) => {
   });
 });
 
+/* A function that is being exported. */
 exports.findUser = catchAsync(async (req, res, next) => {
   const { user } = req;
 
@@ -49,6 +51,7 @@ exports.findUser = catchAsync(async (req, res, next) => {
   });
 });
 
+/* Updating the user. */
 exports.updateUser = catchAsync(async (req, res, next) => {
   const { username, email } = req.body;
   const { user } = req;
@@ -61,6 +64,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
+/* Deleting the user. */
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const { user } = req;
 
@@ -72,6 +76,7 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   });
 });
 
+/* A function that is being exported. */
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { user } = req;
   const { currentPassword, newPassword } = req.body;
@@ -94,6 +99,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   });
 });
 
+/* A function that is being exported. */
 exports.getOrders = catchAsync(async (req, res, next) => {
   const { sessionUser } = req;
 
@@ -125,6 +131,7 @@ exports.getOrders = catchAsync(async (req, res, next) => {
   });
 });
 
+/* A function that is being exported. */
 exports.getOrder = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { sessionUser } = req;

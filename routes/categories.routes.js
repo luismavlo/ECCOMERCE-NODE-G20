@@ -7,11 +7,7 @@ const {
   updateCategory,
   deleteCategory,
 } = require('../controllers/categories.controller');
-const {
-  protect,
-  restrictTo,
-  protectAccountOwner,
-} = require('../middlewares/auth.middleware');
+const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const { validCategoryById } = require('../middlewares/category.middleware');
 const { validateFields } = require('../middlewares/validateField.middleware');
 
@@ -40,18 +36,11 @@ router.patch(
     validateFields,
     validCategoryById,
     restrictTo('admin'),
-    // protectAccountOwner,
   ],
   updateCategory
 );
 
-router.delete(
-  '/:id',
-  validCategoryById,
-  restrictTo('admin'),
-  // protectAccountOwner,
-  deleteCategory
-);
+router.delete('/:id', validCategoryById, restrictTo('admin'), deleteCategory);
 
 module.exports = {
   categoriesRouter: router,
